@@ -4,20 +4,32 @@
     "hero-livana": {
       "type": "hero-livana"
     },
-    "featured-collection-livana": {
-      "type": "featured-collection-livana"
-    },
-    "featured-products-livana": {
-      "type": "featured-products-livana"
+    "featured-products-grid": {
+      "type": "featured-products-grid",
+      "settings": {
+        "title": "Featured Collection",
+        "data_source": "collection"
+      }
     },
     "testimonials-livana": {
       "type": "testimonials-livana"
+    },
+    "lookbook": {
+      "type": "lookbook"
+    },
+    "promotional-banner": {
+      "type": "promotional-banner"
+    },
+    "newsletter": {
+      "type": "newsletter"
     }
   },
   "order": [
+    "promotional-banner",
     "hero-livana",
-    "featured-collection-livana",
-    "featured-products-livana",
-    "testimonials-livana"
+    "featured-products-grid",
+    "lookbook",
+    "testimonials-livana",
+    "newsletter"
   ]
 } 

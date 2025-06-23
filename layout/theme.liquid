@@ -1,10 +1,35 @@
-  <link rel="stylesheet" href="{{ 'critical.css' | asset_url }}">
-  {{ 'style.css' | asset_url | stylesheet_tag }}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
 
-  <script src="{{ 'utils.js' | asset_url }}" defer="defer"></script> 
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
 
-<body>
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
 
+    {% render 'meta-tags' %}
+
+    {{ content_for_header }}
+
+    <link rel="stylesheet" href="{{ 'critical.css' | asset_url }}">
+    {{ 'style.css' | asset_url | stylesheet_tag }}
+    
+    <script src="{{ 'utils.js' | asset_url }}" defer="defer"></script> 
+  </head>
+
+  <body>
     <a class="skip-to-content-link" href="#MainContent">
       {{ "accessibility.skip_to_text" | t }}
     </a>
@@ -17,5 +42,11 @@
 
     {% section 'footer-livana' %}
 
+    <script src="{{ 'header.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'hero-slider.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'product-gallery.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'product-variants.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'add-to-cart.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'accordion.js' | asset_url }}" defer="defer"></script>
   </body>
 </html> 

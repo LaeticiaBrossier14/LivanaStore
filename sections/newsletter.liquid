@@ -1,0 +1,59 @@
+<!-- Newsletter for LivanaStore -->
+<div class="newsletter" data-section-id="{{ section.id }}">
+  <div class="container">
+    <h2 class="newsletter__title">{{ section.settings.title | escape }}</h2>
+    <p class="newsletter__subtitle">{{ section.settings.subtitle | escape }}</p>
+    {%- form 'customer', class: 'newsletter-form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <div class="newsletter-form__field">
+        <input type="email"
+               name="contact[email]"
+               id="NewsletterForm--{{ section.id }}"
+               class="newsletter-form__input"
+               value="{{ form.email }}"
+               aria-required="true"
+               autocorrect="off"
+               autocapitalize="off"
+               autocomplete="email"
+               {% if form.errors %}
+                 aria-invalid="true"
+                 aria-describedby="Newsletter-error--{{ section.id }}"
+               {% endif %}
+               placeholder="{{ 'newsletter.email_placeholder' | t }}">
+        <button type="submit" class="button" name="commit">
+          {{ 'newsletter.subscribe' | t }}
+        </button>
+      </div>
+      {%- if form.errors -%}
+        <small class="newsletter-form__error" id="Newsletter-error--{{ section.id }}">
+          {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+        </small>
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Join Our Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading",
+      "default": "Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %} 

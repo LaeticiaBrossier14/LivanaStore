@@ -2,40 +2,85 @@
 <div class="product-main-livana container" data-section-id="{{ section.id }}">
   <div class="product-main-livana__grid">
     <div class="product-main-livana__gallery">
-      <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.featured_image.alt | escape }}">
+      <div class="product-gallery__main-image">
+        <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.featured_image.alt | escape }}" id="main-product-image">
+      </div>
+      <div class="product-gallery__thumbnails">
+        {% for image in product.images %}
+          <img src="{{ image | image_url: width: 100 }}" alt="{{ image.alt | escape }}" class="thumbnail" data-image-id="{{ image.id }}">
+        {% endfor %}
+      </div>
     </div>
     <div class="product-main-livana__info">
       <h1 class="product-main-livana__title">{{ product.title }}</h1>
       <p class="product-main-livana__price">{{ product.price | money }}</p>
 
-      {%- unless product.has_only_default_variant -%}
-        <div class="product-main-livana__variants">
-          {%- for option in product.options_with_values -%}
-            <div class="variant-group">
-              <label>{{ option.name }}</label>
-              <select>
-                {%- for value in option.values -%}
-                  <option value="{{ value | escape }}">{{ value }}</option>
-                {%- endfor -%}
-              </select>
-            </div>
-          {%- endfor -%}
+      {%- form 'product', product, class: 'product-form' -%}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+        {%- unless product.has_only_default_variant -%}
+          <div class="product-main-livana__variants">
+            {%- for option in product.options_with_values -%}
+              <div class="variant-group">
+                <label for="Option-{{ forloop.index }}">{{ option.name }}</label>
+                <select id="Option-{{ forloop.index }}" name="options[{{ option.name | escape }}]">
+                  {%- for value in option.values -%}
+                    <option value="{{ value | escape }}" {% if option.selected_value == value %}selected="selected"{% endif %}>
+                      {{ value }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endunless -%}
+
+        <div class="product-main-livana__purchase">
+          <input type="number" name="quantity" value="1" min="1">
+          <button type="submit" name="add" class="button">
+            {{ 'products.product.add_to_cart' | t }}
+          </button>
         </div>
-      {%- endunless -%}
+      {%- endform -%}
 
-      <div class="product-main-livana__purchase">
-        <input type="number" name="quantity" value="1" min="1">
-        <button type="submit" name="add" class="button">
-          {{ 'products.product.add_to_cart' | t }}
-        </button>
-      </div>
-
-      <div class="product-main-livana__description">
-        {{ product.description }}
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-header">Description</button>
+          <div class="accordion-content">
+            <div class="product-main-livana__description">
+              {{ product.description }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+  <div class="product-recommendations">
+    <h2>{{ 'products.product.recommendations.title' | t }}</h2>
+    {%- if recommendations.performed -%}
+      {%- if recommendations.products_count > 0 -%}
+        <div class="product-recommendations__grid">
+          {%- for product in recommendations.products -%}
+            <div class="product-card">
+              <a href="{{ product.url }}">
+                <img src="{{ product.featured_image | image_url: width: 400 }}" alt="{{ product.featured_image.alt | escape }}" loading="lazy">
+                <div class="product-card__info">
+                  <h3>{{ product.title }}</h3>
+                  <p>{{ product.price | money }}</p>
+                </div>
+              </a>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
 </div>
+
+<script type="application/json" id="product-json">
+  {{ product | json }}
+</script>
 
 {% schema %}
 {
