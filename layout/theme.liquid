@@ -1,0 +1,21 @@
+  <link rel="stylesheet" href="{{ 'critical.css' | asset_url }}">
+  {{ 'style.css' | asset_url | stylesheet_tag }}
+
+  <script src="{{ 'utils.js' | asset_url }}" defer="defer"></script> 
+
+<body>
+
+    <a class="skip-to-content-link" href="#MainContent">
+      {{ "accessibility.skip_to_text" | t }}
+    </a>
+
+    {% section 'header-livana' %}
+
+    <main id="MainContent" class="main-content" role="main">
+      {{ content_for_layout }}
+    </main>
+
+    {% section 'footer-livana' %}
+
+  </body>
+</html> 

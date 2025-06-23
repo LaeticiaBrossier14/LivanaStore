@@ -1,0 +1,11 @@
+{
+  "name": "About page",
+  "sections": {
+    "main": {
+      "type": "main-page-about-livana"
+    }
+  },
+  "order": [
+    "main"
+  ]
+} 

@@ -1,0 +1,58 @@
+<!-- Hero Banner for LivanaStore -->
+<div class="hero-livana" data-section-id="{{ section.id }}">
+  {%- if section.settings.image != blank -%}
+    <img src="{{ section.settings.image | image_url: width: 1920 }}"
+         alt="{{ section.settings.image.alt | escape }}"
+         class="hero-livana__image">
+  {%- else -%}
+    <div class="hero-livana__placeholder">
+      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+    </div>
+  {%- endif -%}
+
+  <div class="hero-livana__content container">
+    <h1 class="hero-livana__title">{{ section.settings.title | escape }}</h1>
+    <p class="hero-livana__subtitle">{{ section.settings.subtitle | escape }}</p>
+    {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+      <a href="{{ section.settings.button_link }}" class="button">
+        {{ section.settings.button_label | escape }}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero Banner - Livana",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Modern & Elegant"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading",
+      "default": "Discover our new collection"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ]
+}
+{% endschema %} 

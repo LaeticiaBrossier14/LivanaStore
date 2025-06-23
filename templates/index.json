@@ -1,0 +1,23 @@
+{
+  "name": "Home page",
+  "sections": {
+    "hero-livana": {
+      "type": "hero-livana"
+    },
+    "featured-collection-livana": {
+      "type": "featured-collection-livana"
+    },
+    "featured-products-livana": {
+      "type": "featured-products-livana"
+    },
+    "testimonials-livana": {
+      "type": "testimonials-livana"
+    }
+  },
+  "order": [
+    "hero-livana",
+    "featured-collection-livana",
+    "featured-products-livana",
+    "testimonials-livana"
+  ]
+} 

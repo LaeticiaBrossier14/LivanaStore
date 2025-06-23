@@ -1,0 +1,61 @@
+<!-- Header for LivanaStore -->
+<header class="header-livana" data-section-id="{{ section.id }}">
+  <div class="container header-livana__container">
+    <div class="header-livana__left">
+      <a href="{{ routes.root_url }}" class="header-livana__logo">
+        {%- if section.settings.logo != blank -%}
+          <img src="{{ section.settings.logo | image_url: width: 100 }}" alt="{{ shop.name }}" style="max-width: {{ section.settings.logo_width }}px;">
+        {%- else -%}
+          <span>{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+    </div>
+
+    <nav class="header-livana__center">
+      <ul class="header-livana__menu">
+        {%- for link in linklists[section.settings.menu].links -%}
+          <li>
+            <a href="{{ link.url }}">{{ link.title }}</a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="header-livana__right">
+      <a href="{{ routes.cart_url }}" class="header-livana__cart-icon">
+        <!-- SVG Cart Icon -->
+        <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-cart" viewBox="0 0 32 32"><path d="M21 24.1H11.5c-1.2 0-2.3-1-2.4-2.2L7.3 7.9H2.5a.5.5 0 010-1h5.3c1.2 0 2.3 1 2.4 2.2l1.8 14H21a.5.5 0 010 1zM11 27.6c-1.4 0-2.5 1.1-2.5 2.5s1.1 2.5 2.5 2.5 2.5-1.1 2.5-2.5-1.1-2.5-2.5-2.5zM21.5 27.6c-1.4 0-2.5 1.1-2.5 2.5s1.1 2.5 2.5 2.5 2.5-1.1 2.5-2.5-1.1-2.5-2.5-2.5z"/></svg>
+        <span>{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header - Livana",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 250,
+      "step": 5,
+      "unit": "px",
+      "label": "Custom logo width",
+      "default": 100
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %} 

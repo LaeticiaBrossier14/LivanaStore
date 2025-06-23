@@ -1,0 +1,45 @@
+<!-- Main Product Section for LivanaStore -->
+<div class="product-main-livana container" data-section-id="{{ section.id }}">
+  <div class="product-main-livana__grid">
+    <div class="product-main-livana__gallery">
+      <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.featured_image.alt | escape }}">
+    </div>
+    <div class="product-main-livana__info">
+      <h1 class="product-main-livana__title">{{ product.title }}</h1>
+      <p class="product-main-livana__price">{{ product.price | money }}</p>
+
+      {%- unless product.has_only_default_variant -%}
+        <div class="product-main-livana__variants">
+          {%- for option in product.options_with_values -%}
+            <div class="variant-group">
+              <label>{{ option.name }}</label>
+              <select>
+                {%- for value in option.values -%}
+                  <option value="{{ value | escape }}">{{ value }}</option>
+                {%- endfor -%}
+              </select>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endunless -%}
+
+      <div class="product-main-livana__purchase">
+        <input type="number" name="quantity" value="1" min="1">
+        <button type="submit" name="add" class="button">
+          {{ 'products.product.add_to_cart' | t }}
+        </button>
+      </div>
+
+      <div class="product-main-livana__description">
+        {{ product.description }}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Main Product - Livana",
+  "settings": []
+}
+{% endschema %} 

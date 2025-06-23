@@ -1,0 +1,58 @@
+<!-- Featured Collection for LivanaStore -->
+<div class="featured-collection-livana container" data-section-id="{{ section.id }}">
+  <h2 class="featured-collection-livana__title">{{ section.settings.title | escape }}</h2>
+  <div class="featured-collection-livana__grid">
+    {%- assign collection = collections[section.settings.collection] -%}
+    {%- for product in collection.products limit: section.settings.products_to_show -%}
+      <div class="product-card">
+        <a href="{{ product.url | within: collection }}">
+          <img src="{{ product.featured_image | image_url: width: 400 }}" alt="{{ product.featured_image.alt | escape }}" loading="lazy">
+          <div class="product-card__info">
+            <h3>{{ product.title }}</h3>
+            <p>{{ product.price | money }}</p>
+          </div>
+        </a>
+      </div>
+    {%- else -%}
+      {%- for i in (1..section.settings.products_to_show) -%}
+        <div class="product-card">
+          <div class="product-card__placeholder">
+            {{ 'product-' | append: i | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+          <div class="product-card__info">
+            <h3>{{ 'onboarding.product_title' | t }}</h3>
+            <p>{{ 1999 | money }}</p>
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured Collection - Livana",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Nouveautés"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 8,
+      "step": 2,
+      "label": "Products to show",
+      "default": 4
+    }
+  ]
+}
+{% endschema %} 

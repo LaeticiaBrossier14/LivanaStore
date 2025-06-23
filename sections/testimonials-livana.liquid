@@ -1,0 +1,58 @@
+<!-- Testimonials for LivanaStore -->
+<div class="testimonials-livana container" data-section-id="{{ section.id }}">
+  <h2 class="testimonials-livana__title">{{ section.settings.title | escape }}</h2>
+  <div class="testimonials-livana__grid">
+    {%- for block in section.blocks -%}
+      <div class="testimonial-card" {{ block.shopify_attributes }}>
+        <blockquote class="testimonial-card__text">
+          "{{ block.settings.text | escape }}"
+        </blockquote>
+        <cite class="testimonial-card__author">- {{ block.settings.author | escape }}</cite>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Testimonials - Livana",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Ce que nos clientes disent"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>J'adore la qualité et le style de cette boutique. C'est devenu mon endroit préféré pour faire du shopping !</p>"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author",
+          "default": "Cliente satisfaite"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials - Livana",
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
+{% endschema %} 

@@ -1,0 +1,27 @@
+<!-- Main Page About for LivanaStore -->
+<div class="page-about-livana container" data-section-id="{{ section.id }}">
+  <h1 class="page-about-livana__title">{{ page.title }}</h1>
+  <div class="page-about-livana__content">
+    {%- if section.settings.image != blank -%}
+      <div class="page-about-livana__image">
+        <img src="{{ section.settings.image | image_url: width: 600 }}" alt="{{ section.settings.image.alt | escape }}">
+      </div>
+    {%- endif -%}
+    <div class="page-about-livana__text">
+      {{ page.content }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Main Page About - Livana",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    }
+  ]
+}
+{% endschema %} 

@@ -1,0 +1,80 @@
+<!-- Footer for LivanaStore -->
+<footer class="footer-livana" data-section-id="{{ section.id }}">
+  <div class="container footer-livana__container">
+    {%- for block in section.blocks -%}
+      <div class="footer-livana__column" {{ block.shopify_attributes }}>
+        <h3 class="footer-livana__title">{{ block.settings.title }}</h3>
+        {%- if block.type == 'menu' and block.settings.menu != blank -%}
+          <ul class="footer-livana__menu">
+            {%- for link in linklists[block.settings.menu].links -%}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        {%- elsif block.type == 'social' -%}
+          <div class="footer-livana__social-icons">
+            {%- if settings.social_twitter_link != blank -%}
+              <a href="{{ settings.social_twitter_link }}">Twitter</a>
+            {%- endif -%}
+            {%- if settings.social_facebook_link != blank -%}
+              <a href="{{ settings.social_facebook_link }}">Facebook</a>
+            {%- endif -%}
+            {%- if settings.social_pinterest_link != blank -%}
+              <a href="{{ settings.social_pinterest_link }}">Pinterest</a>
+            {%- endif -%}
+            {%- if settings.social_instagram_link != blank -%}
+              <a href="{{ settings.social_instagram_link }}">Instagram</a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+  <div class="footer-livana__bottom">
+    <small>&copy; {{ 'now' | date: "%Y" }}, {{ shop.name }}</small>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer - Livana",
+  "max_blocks": 3,
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu Column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Column Title",
+          "default": "Infos"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
+    },
+    {
+      "type": "social",
+      "name": "Social Column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Column Title",
+          "default": "Réseaux Sociaux"
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      { "type": "menu", "settings": { "title": "Infos" } },
+      { "type": "menu", "settings": { "title": "Suivi" } },
+      { "type": "social" }
+    ]
+  }
+}
+{% endschema %} 
