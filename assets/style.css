@@ -301,12 +301,13 @@ a:hover {
 /* ---------------------------------- */
 .hero-livana {
     position: relative;
-    text-align: center;
-    color: var(--color-secondaire);
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 70vh;
+    text-align: center;
+    min-height: 70vh; /* Make hero section taller */
+    color: var(--color-secondaire);
+    padding: 60px 20px;
     overflow: hidden;
 }
 
