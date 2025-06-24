@@ -1,0 +1,23 @@
+<!-- Cart Drawer Snippet for LivanaStore -->
+<div id="cart-drawer" class="cart-drawer">
+  <div class="cart-drawer__header">
+    <h3>{{ 'cart.title' | t }}</h3>
+    <button type="button" class="cart-drawer__close">
+      {%- render 'icon-close' -%}
+    </button>
+  </div>
+  <div class="cart-drawer__content">
+    <!-- Cart items will be injected here by JavaScript -->
+  </div>
+  <div class="cart-drawer__footer">
+    <div class="cart-drawer__subtotal">
+      <span>{{ 'cart.subtotal' | t }}</span>
+      <span class="cart-drawer__subtotal-price">{{ cart.total_price | money }}</span>
+    </div>
+    <a href="{{ routes.cart_url }}" class="button button--secondary">{{ 'cart.view_cart' | t }}</a>
+    <form action="{{ routes.cart_url }}" method="post">
+      <button type="submit" name="checkout" class="button">{{ 'cart.checkout' | t }}</button>
+    </form>
+  </div>
+</div>
+<div id="cart-drawer-overlay" class="cart-drawer-overlay"></div> 

@@ -1,11 +1,11 @@
 {
   "sections": {
     "main": {
-      "type": "main-cart-livana",
+      "type": "main-page-contact-livana",
       "settings": {}
     }
   },
   "order": [
     "main"
   ]
-}
+} 

@@ -25,6 +25,15 @@
               <a href="{{ settings.social_instagram_link }}">Instagram</a>
             {%- endif -%}
           </div>
+        {%- elsif block.type == 'newsletter' -%}
+          <div class="footer-livana__newsletter">
+            <p>{{ block.settings.text }}</p>
+            {%- form 'customer' -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <input type="email" name="contact[email]" placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}">
+              <button type="submit">{{ 'general.newsletter_form.submit' | t }}</button>
+            {%- endform -%}
+          </div>
         {%- endif -%}
       </div>
     {%- endfor -%}
@@ -37,7 +46,7 @@
 {% schema %}
 {
   "name": "Footer - Livana",
-  "max_blocks": 3,
+  "max_blocks": 4,
   "blocks": [
     {
       "type": "menu",
@@ -67,13 +76,31 @@
           "default": "Réseaux Sociaux"
         }
       ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter Column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Column Title",
+          "default": "Newsletter"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Inscrivez-vous pour recevoir nos offres exclusives.</p>"
+        }
+      ]
     }
   ],
   "default": {
     "blocks": [
       { "type": "menu", "settings": { "title": "Infos" } },
       { "type": "menu", "settings": { "title": "Suivi" } },
-      { "type": "social" }
+      { "type": "newsletter" }
     ]
   }
 }

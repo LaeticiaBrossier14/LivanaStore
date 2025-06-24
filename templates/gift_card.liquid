@@ -40,33 +40,40 @@
           </p>
         {% endif %}
 
-        <p>
-          {% if settings.logo %}
-            {{ settings.logo | image_url: width: 300 | image_tag: alt: shop.name }}
-          {% else %}
-            <img
-              src="{{ 'gift-card/card.svg' | shopify_asset_url }}"
-              alt="{{ 'gift_card.card' | t }}"
-              width="300"
-              height="200"
-            >
+        <div class="gift-card__image-wrapper">
+          <img src="{{ gift_card.image_url }}" alt="" loading="lazy" width="300" height="200">
+        </div>
+
+        <div class="gift-card__content">
+          <h2 class="gift-card__title">{{ 'gift_card.title' | t }}</h2>
+          <p>
+            {% if settings.logo %}
+              {{ settings.logo | image_url: width: 300 | image_tag: alt: shop.name }}
+            {% else %}
+              <img
+                src="{{ 'gift-card/card.svg' | shopify_asset_url }}"
+                alt="{{ 'gift_card.card' | t }}"
+                width="300"
+                height="200"
+              >
+            {% endif %}
+          </p>
+
+          <h2>{{ shop.name }}</h2>
+          <p>{{ 'gift_card.use_at_checkout' | t }}</p>
+          <p>{{ gift_card.code | format_code }}</p>
+
+          {% if gift_card.pass_url %}
+            <a href="{{ gift_card.pass_url }}">
+              <img
+                src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}"
+                alt="{{ 'gift_card.add_to_apple_wallet' | t }}"
+                width="200"
+                height="60"
+              >
+            </a>
           {% endif %}
-        </p>
-
-        <h2>{{ shop.name }}</h2>
-        <p>{{ 'gift_card.use_at_checkout' | t }}</p>
-        <p>{{ gift_card.code | format_code }}</p>
-
-        {% if gift_card.pass_url %}
-          <a href="{{ gift_card.pass_url }}">
-            <img
-              src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}"
-              alt="{{ 'gift_card.add_to_apple_wallet' | t }}"
-              width="200"
-              height="60"
-            >
-          </a>
-        {% endif %}
+        </div>
       </div>
     </main>
   </body>

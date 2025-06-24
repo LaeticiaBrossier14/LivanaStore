@@ -1,0 +1,71 @@
+<!-- Main Cart Section for LivanaStore -->
+<div class="cart-page-livana container" data-section-id="{{ section.id }}">
+  <h1 class="cart-page-livana__title">{{ 'cart.title' | t }}</h1>
+
+  {%- if cart.empty? -%}
+    <div class="cart-page-livana__empty">
+      <p>{{ 'cart.empty' | t }}</p>
+      <a href="{{ routes.all_products_collection_url }}" class="button">
+        {{ 'general.continue_shopping' | t }}
+      </a>
+    </div>
+  {%- else -%}
+    <form action="{{ routes.cart_url }}" method="post" class="cart-page-livana__form">
+      <div class="cart-page-livana__header">
+        <div class="cart-page-livana__header-cell product-cell">{{ 'cart.label.product' | t }}</div>
+        <div class="cart-page-livana__header-cell">{{ 'cart.label.price' | t }}</div>
+        <div class="cart-page-livana__header-cell">{{ 'cart.label.quantity' | t }}</div>
+        <div class="cart-page-livana__header-cell total-cell">{{ 'cart.label.total' | t }}</div>
+      </div>
+
+      <div class="cart-page-livana__items">
+        {%- for item in cart.items -%}
+          <div class="cart-item">
+            <div class="cart-item__product product-cell">
+              <a href="{{ item.url }}">
+                <img src="{{ item.image | image_url: width: 150 }}" alt="{{ item.image.alt | escape }}" loading="lazy" width="150" height="150">
+              </a>
+              <div>
+                <a href="{{ item.url }}">{{ item.product.title }}</a>
+                <p>{{ item.variant.title }}</p>
+                <a href="{{ item.url_to_remove }}" class="cart-item__remove">{{ 'cart.remove' | t }}</a>
+              </div>
+            </div>
+            <div class="cart-item__price">
+              {{ item.price | money }}
+            </div>
+            <div class="cart-item__quantity">
+              <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" data-line="{{ forloop.index }}">
+            </div>
+            <div class="cart-item__total total-cell">
+              {{ item.final_line_price | money }}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="cart-page-livana__footer">
+        <div class="cart-page-livana__notes">
+          <label for="cart-notes">{{ 'cart.note' | t }}</label>
+          <textarea name="note" id="cart-notes">{{ cart.note }}</textarea>
+        </div>
+        <div class="cart-page-livana__summary">
+          <p class="cart-page-livana__subtotal">
+            <span>{{ 'cart.subtotal' | t }}</span>
+            <span>{{ cart.total_price | money }}</span>
+          </p>
+          <p class="cart-page-livana__taxes_shipping">{{ 'cart.taxes_and_shipping_at_checkout' | t }}</p>
+          <button type="submit" name="update" class="button button--secondary">{{ 'cart.update' | t }}</button>
+          <button type="submit" name="checkout" class="button">{{ 'cart.checkout' | t }}</button>
+        </div>
+      </div>
+    </form>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Main Cart - Livana",
+  "settings": []
+}
+{% endschema %} 

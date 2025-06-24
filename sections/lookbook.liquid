@@ -7,7 +7,7 @@
       <div class="lookbook-card" {{ block.shopify_attributes }}>
         <a href="{{ block.settings.link }}">
           {%- if block.settings.image != blank -%}
-            <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.image.alt | escape }}" loading="lazy">
+            <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.image.alt | escape }}" loading="lazy" width="600" height="720">
           {%- else -%}
             <div class="lookbook-card__placeholder">
               {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}

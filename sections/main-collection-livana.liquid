@@ -1,0 +1,285 @@
+{% comment %}
+  This section is used in the collection template to render collection page
+  listing all products within a collection.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
+{% endcomment %}
+
+{%- liquid
+  assign products_per_page = section.settings.products_per_page
+-%}
+
+<div class="collection-container-wrapper" data-section-id="{{ section.id }}">
+  {%- paginate collection.products by products_per_page -%}
+  <div class="collection-container container">
+    <div class="collection-sidebar">
+      <form id="collection-filters-form">
+        <div class="filter-group">
+          <h4>Disponibilité</h4>
+          <label>
+            <input type="checkbox" name="filter.v.availability" value="1" {% if collection.filters.availability.value %}checked{% endif %}>
+            En stock
+          </label>
+        </div>
+
+        <div class="filter-group">
+          <h4>Prix</h4>
+          {%- liquid
+            assign prices = collection.products | map: 'price'
+            assign min_price = prices | first
+            assign max_price = prices | first
+            for price in prices
+              if price < min_price
+                assign min_price = price
+              endif
+              if price > max_price
+                assign max_price = price
+              endif
+            endfor
+
+            assign current_min_price = collection.filters.price.value.min | default: min_price
+            assign current_max_price = collection.filters.price.value.max | default: max_price
+          -%}
+          <div class="price-range">
+            <label for="filter.v.price.gte">De</label>
+            <input type="number" name="filter.v.price.gte" value="{{ current_min_price | money_without_currency | replace: ',', '' }}" placeholder="{{ min_price | money }}">
+            <label for="filter.v.price.lte">À</label>
+            <input type="number" name="filter.v.price.lte" value="{{ current_max_price | money_without_currency | replace: ',', '' }}" placeholder="{{ max_price | money }}">
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div id="mobile-filter-panel" class="mobile-filter-panel">
+      <div class="mobile-filter-panel__header">
+        <h4>Filtres</h4>
+        <button id="close-mobile-filters">Fermer</button>
+      </div>
+      <div class="mobile-filter-panel__content">
+        <!-- Filters will be cloned here -->
+      </div>
+    </div>
+    <div id="mobile-filter-overlay" class="mobile-filter-overlay"></div>
+
+    <div class="collection-content">
+      <div class="collection-header">
+        <h1>{{ collection.title }}</h1>
+        {%- if collection.description != blank -%}
+          <div class="collection-description">
+            {{ collection.description }}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="collection-toolbar">
+        <button class="button button--secondary" id="mobile-filter-trigger">Filtres</button>
+        <div class="collection-sorting">
+          <label for="sort-by">Trier par:</label>
+          <select name="sort_by" id="sort-by">
+            {%- for option in collection.sort_options -%}
+              <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>{{ option.name }}</option>
+            {%- endfor -%}
+          </select>
+        </div>
+      </div>
+
+      <div id="product-grid" class="featured-collection-livana" data-section-id="{{ section.id }}">
+        <div class="featured-collection-livana__grid">
+          {%- for product in collection.products -%}
+            {%- render 'product-card', product: product -%}
+          {%- else -%}
+            <p>{{ 'collections.general.no_matches' | t }}</p>
+          {%- endfor -%}
+        </div>
+
+        <div class="pagination">
+          {{ paginate | default_pagination }}
+        </div>
+      </div>
+    </div>
+  </div>
+  {%- endpaginate -%}
+</div>
+
+<script>
+class CollectionFilters {
+  constructor() {
+    this.container = document.querySelector('.collection-container');
+    this.form = document.getElementById('collection-filters-form');
+    this.sortby = document.getElementById('sort-by');
+    this.productGrid = document.getElementById('product-grid');
+
+    this.init();
+  }
+
+  init() {
+    this.form.addEventListener('input', this.onFormChange.bind(this));
+    this.sortby.addEventListener('change', this.onFormChange.bind(this));
+    this.initMobileFilters();
+  }
+  
+  onFormChange(event) {
+    event.preventDefault();
+    const formData = new FormData(this.form);
+    const searchParams = new URLSearchParams(formData);
+    searchParams.set('sort_by', this.sortby.value);
+    
+    const url = `${window.location.pathname}?section_id={{ section.id }}&${searchParams.toString()}`;
+    this.renderPage(url, searchParams);
+  }
+
+  renderPage(url, searchParams) {
+    fetch(url)
+      .then(response => response.text())
+      .then((responseText) => {
+        const html = new DOMParser().parseFromString(responseText, 'text/html');
+        this.productGrid.innerHTML = html.getElementById('product-grid').innerHTML;
+        this.updateURL(searchParams);
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }
+
+  updateURL(searchParams) {
+      window.history.pushState({ searchParams: searchParams.toString() }, '', `${window.location.pathname}?${searchParams.toString()}`);
+  }
+
+  initMobileFilters() {
+    const mobileFilterTrigger = document.getElementById('mobile-filter-trigger');
+    const closeMobileFilters = document.getElementById('close-mobile-filters');
+    const mobileFilterPanel = document.getElementById('mobile-filter-panel');
+    const mobileFilterOverlay = document.getElementById('mobile-filter-overlay');
+    const mobileFiltersFormContainer = document.querySelector('.mobile-filter-panel__content');
+    
+    // Clone desktop form into mobile panel
+    const mobileForm = this.form.cloneNode(true);
+    mobileForm.id = 'collection-filters-form-mobile';
+    mobileFiltersFormContainer.appendChild(mobileForm);
+    mobileForm.addEventListener('input', (event) => {
+        const formData = new FormData(mobileForm);
+        const desktopFormData = new FormData(this.form);
+        
+        for(let [key, val] of formData.entries()){
+            desktopFormData.set(key, val);
+        }
+
+        const searchParams = new URLSearchParams(desktopFormData);
+        searchParams.set('sort_by', this.sortby.value);
+        const url = `${window.location.pathname}?section_id={{ section.id }}&${searchParams.toString()}`;
+        this.renderPage(url, searchParams);
+    });
+
+    const openMobileFilters = () => {
+      mobileFilterPanel.classList.add('is-active');
+      mobileFilterOverlay.classList.add('is-active');
+    };
+
+    const closeMobileFiltersFunc = () => {
+      mobileFilterPanel.classList.remove('is-active');
+      mobileFilterOverlay.classList.remove('is-active');
+    };
+
+    mobileFilterTrigger.addEventListener('click', openMobileFilters);
+    closeMobileFilters.addEventListener('click', closeMobileFiltersFunc);
+    mobileFilterOverlay.addEventListener('click', closeMobileFiltersFunc);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  new CollectionFilters();
+});
+</script>
+
+{% stylesheet %}
+  .collection-products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  }
+  .collection-container {
+    display: flex;
+    gap: 2rem;
+  }
+  .collection-sidebar {
+    width: 250px;
+    flex-shrink: 0;
+  }
+  .collection-content {
+    flex-grow: 1;
+  }
+  .collection-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  #mobile-filter-trigger {
+    display: none; /* Hide on desktop */
+  }
+  @media (max-width: 768px) {
+    .collection-sidebar {
+      display: none; /* Hide sidebar on mobile */
+    }
+    #mobile-filter-trigger {
+      display: block; /* Show trigger on mobile */
+    }
+  }
+  .filter-group {
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  .price-range {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .price-range input {
+    width: 80px;
+  }
+  .mobile-filter-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80%;
+    height: 100%;
+    background-color: white;
+    z-index: 102;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  .mobile-filter-panel.is-active {
+    transform: translateX(0);
+  }
+  .mobile-filter-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 101;
+    display: none;
+  }
+  .mobile-filter-overlay.is-active {
+    display: block;
+  }
+  .featured-collection-livana__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Collection Page - Livana",
+  "settings": [
+    {
+      "type": "number",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "default": 16
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,51 @@
+<!-- Contact Page Section for LivanaStore -->
+<div class="contact-page-livana container" data-section-id="{{ section.id }}">
+  <h1 class="contact-page-livana__title">{{ page.title }}</h1>
+  <div class="contact-page-livana__content">
+    <div class="contact-page-livana__text">
+      {{ page.content }}
+    </div>
+    <div class="contact-page-livana__form">
+      {%- form 'contact' -%}
+        {%- if form.posted_successfully? -%}
+          <p class="form-success">{{ 'contact.form.post_success' | t }}</p>
+        {%- endif -%}
+
+        {{ form.errors | default_errors }}
+
+        <div class="form-field">
+          <label for="ContactFormName">{{ 'contact.form.name' | t }}</label>
+          <input type="text" id="ContactFormName" name="contact[name]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}">
+        </div>
+
+        <div class="form-field">
+          <label for="ContactFormEmail">{{ 'contact.form.email' | t }}</label>
+          <input type="email" id="ContactFormEmail" name="contact[email]" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}">
+        </div>
+
+        <div class="form-field">
+          <label for="ContactFormPhone">{{ 'contact.form.phone' | t }}</label>
+          <input type="tel" id="ContactFormPhone" name="contact[phone]" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+        </div>
+
+        <div class="form-field">
+          <label for="ContactFormMessage">{{ 'contact.form.message' | t }}</label>
+          <textarea rows="10" id="ContactFormMessage" name="contact[body]">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+        </div>
+
+        <button type="submit" class="button">
+          {{ 'contact.form.send' | t }}
+        </button>
+      {%- endform -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Contact Page - Livana",
+  "settings": [],
+  "presets": [
+  ]
+}
+{% endschema %} 
